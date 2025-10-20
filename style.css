@@ -1,0 +1,341 @@
+/* Thiết lập chung, nền đen */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: #000000; 
+    font-family: 'Montserrat', sans-serif;
+    color: #ffffff;
+    overflow: hidden; /* Ngăn cuộn trang */
+}
+
+/* --- 1. LỚP PHỦ INTRO VÀ ĐỐM SÁNG --- */
+
+#intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    transition: opacity 1s ease-out;
+}
+
+/* Kiểu đốm sáng (Hồng) */
+.intro-particle, .bg-particle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    opacity: 0;
+    background-color: #ffc2d1; 
+    box-shadow: 
+        0 0 10px #ffc2d1, 
+        0 0 25px #ff85a2, 
+        0 0 45px #f72585, 
+        0 0 70px #7209b7; 
+    filter: blur(4px);
+    --start-transform: translate(0,0);
+    --end-transform: translate(0,0);
+}
+
+/* Kiểu đốm sáng (Xanh) */
+.intro-particle.blue, .bg-particle.blue {
+    background-color: #a7edee;
+    box-shadow: 
+        0 0 10px #a7edee,
+        0 0 25px #00bbf9,
+        0 0 45px #007bff,
+        0 0 70px #480ca8;
+}
+
+/* Kiểu vệt sáng (Hồng) */
+.intro-streak, .bg-streak {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 50px;
+    border-radius: 2px;
+    opacity: 0;
+    transform-origin: center;
+    background: linear-gradient(to bottom, transparent, #ffc2d1, transparent);
+    box-shadow: 
+        0 0 5px #ffc2d1,
+        0 0 15px #ff85a2,
+        0 0 25px #f72585;
+    filter: blur(2px);
+    --start-transform: translate(0,0);
+    --end-transform: translate(0,0);
+}
+
+/* Kiểu vệt sáng (Xanh) */
+.intro-streak.blue, .bg-streak.blue {
+    background: linear-gradient(to bottom, transparent, #a7edee, transparent);
+    box-shadow: 
+        0 0 5px #a7edee,
+        0 0 15px #00bbf9,
+        0 0 25px #007bff;
+}
+
+/* Animation Intro (giữ nguyên) */
+#intro-overlay.converge .intro-particle,
+#intro-overlay.converge .intro-streak {
+    animation: converge 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+#intro-overlay.explode .intro-particle,
+#intro-overlay.explode .intro-streak {
+    animation: explode 1.5s ease-out forwards;
+}
+
+/* --- 2. LỚP NỀN VÀ ĐỐM SÁNG LẤP LÁNH --- */
+
+#background-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.bg-particle, .bg-streak {
+    position: absolute;
+    bottom: -20px;
+    opacity: 0;
+    animation: float-twinkle 15s linear infinite;
+    animation-fill-mode: both;
+}
+
+.bg-streak {
+    animation: float-streak 20s linear infinite;
+}
+
+/* --- 3. NỘI DUNG CHÍNH (ẢNH VÀ LỜI CHÚC) --- */
+
+.container {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1.5s ease-in;
+}
+
+/* Định dạng ảnh (giữ nguyên) */
+.top-image {
+    width: 700px; 
+    height: 458px; 
+    object-fit: cover; 
+    border-radius: 10px; 
+    margin-bottom: 30px; 
+    box-shadow: 0 10px 30px rgba(255, 133, 162, 0.4); 
+}
+
+/* Định dạng lời chúc (giữ nguyên) */
+h1 {
+    font-size: 2.5rem; 
+    font-weight: 700;
+    color: #f0f0f0; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px; 
+    margin-bottom: 25px;
+    white-space: nowrap; 
+    overflow: hidden; 
+    border-right: .15em solid #ff85a2; 
+    animation: blink-caret .75s step-end infinite;
+}
+
+/* Định dạng tên (giữ nguyên) */
+h2 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 4rem; 
+    font-weight: 700;
+    color: #ff85a2; 
+    margin: 0;
+}
+
+/* --- CẬP NHẬT HIỆU ỨNG TÊN & LỜI CHÚC --- */
+
+/* 1. Thiết lập trạng thái ban đầu cho Tên và Lời chúc cuối */
+#name-element, #final-wish {
+    opacity: 0; /* Ban đầu ẩn đi */
+    will-change: opacity, transform; /* Tối ưu hóa animation */
+}
+
+/* 2. Định dạng cho lời chúc cuối */
+#final-wish {
+    font-family: 'Dancing Script', cursive; /* Dùng font chữ đẹp */
+    font-size: 2.2rem; /* Cỡ chữ */
+    color: #a7edee; /* Màu xanh nước biển cho nổi bật */
+    line-height: 1.5;
+    margin-top: 10px;
+    /* Hiệu ứng glow màu xanh */
+    text-shadow: 
+        0 0 10px #a7edee,
+        0 0 20px #00bbf9;
+}
+
+/* 3. Thêm class 'visible' và 'hide' để kích hoạt animation */
+#name-element.visible {
+    animation: glowIn 1.5s ease-out forwards;
+}
+
+#name-element.hide {
+    animation: fadeOut 1s ease-out forwards;
+}
+
+#final-wish.visible {
+    animation: wishFadeIn 2s ease-out forwards;
+}
+
+
+/* --- CSS TRÌNH PHÁT NHẠC (giữ nguyên) --- */
+#music-player {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 15px;
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 50;
+    box-shadow: 0 5px 20px rgba(255, 133, 162, 0.3);
+    border: 1px solid rgba(255, 133, 162, 0.2);
+}
+.song-info { display: flex; align-items: center; gap: 10px; width: 100%; }
+#cover-art { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+#song-title { font-size: 1rem; font-weight: 600; color: #f0f0f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.controls { display: flex; gap: 5px; align-items: center; }
+.controls button { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; transition: color 0.2s ease-in-out, transform 0.2s ease-in-out; padding: 5px; border-radius: 5px; }
+.controls button:hover { color: #ff85a2; transform: scale(1.1); }
+#play-pause-btn { font-size: 1.6rem; color: #ff85a2; }
+#play-pause-btn:hover { color: #ffc2d1; }
+.controls button.active { color: #ffc2d1; }
+#volume-slider { width: 80px; -webkit-appearance: none; appearance: none; background: transparent; cursor: pointer; margin-left: 5px; }
+#volume-slider::-webkit-slider-runnable-track { height: 5px; background: rgba(255, 255, 255, 0.3); border-radius: 5px; }
+#volume-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; margin-top: -5px; width: 15px; height: 15px; background: #ff85a2; border-radius: 50%; border: 2px solid #000; box-shadow: 0 0 5px #ff85a2; }
+#volume-slider::-moz-range-track { height: 5px; background: rgba(255, 255, 255, 0.3); border-radius: 5px; }
+#volume-slider::-moz-range-thumb { width: 15px; height: 15px; background: #ff85a2; border-radius: 50%; border: 2px solid #000; box-shadow: 0 0 5px #ff85a2; }
+
+/* --- CSS GHI CHÚ NHẠC (giữ nguyên) --- */
+#music-player-note {
+    position: fixed;
+    bottom: 50px; 
+    right: 400px; 
+    background-color: rgba(255, 255, 255, 0.1); 
+    color: #f0f0f0; 
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    z-index: 49; 
+    box-shadow: 0 2px 10px rgba(255, 133, 162, 0.2); 
+    white-space: nowrap; 
+    opacity: 0; 
+    transition: opacity 0.5s ease-out; 
+    animation: bounceArrow 1.5s infinite ease-in-out;
+}
+#music-player-note p { margin: 0; display: flex; align-items: center; gap: 8px; }
+#music-player-note .fas.fa-arrow-right { color: #ff85a2; font-size: 1.1rem; animation: arrowPulse 1.5s infinite ease-in-out; }
+
+/* --- 4. CÁC KEYFRAMES (CẬP NHẬT) --- */
+
+/* Các keyframe cũ (giữ nguyên) */
+@keyframes converge {
+    0% { transform: var(--start-transform); opacity: 0.8; }
+    100% { transform: translate(0, 0) scale(0.2); opacity: 1; }
+}
+@keyframes explode {
+    0% { transform: translate(0, 0) scale(0.2); opacity: 1; }
+    100% { transform: var(--end-transform) rotateZ(var(--random-rotation, 0deg)); opacity: 0; filter: blur(8px); }
+}
+@keyframes float-twinkle {
+    0% { transform: translateY(0) rotateZ(0deg); opacity: 0; }
+    20% { opacity: 0.8; }
+    50% { opacity: 0.3; transform: translateY(-50vh) rotateZ(180deg); }
+    80% { opacity: 1; }
+    100% { transform: translateY(-100vh) rotateZ(360deg); opacity: 0; }
+}
+@keyframes float-streak {
+    0% { transform: translate(0, 0) rotateZ(var(--random-rotation-bg, 0deg)); opacity: 0; }
+    10% { opacity: 0.7; }
+    50% { transform: translate(var(--float-end-x), -50vh) rotateZ(var(--random-rotation-bg, 0deg)); opacity: 0.4; }
+    90% { opacity: 0.9; }
+    100% { transform: translate(var(--float-end-x), -100vh) rotateZ(var(--random-rotation-bg, 0deg)); opacity: 0; }
+}
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #ff85a2; }
+}
+@keyframes bounceArrow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+@keyframes arrowPulse {
+    0%, 100% { color: #ff85a2; transform: translateX(0); }
+    50% { color: #ffc2d1; transform: translateX(5px); }
+}
+
+/* --- KEYFRAMES MỚI CHO TÊN VÀ LỜI CHÚC --- */
+
+/* Hiệu ứng 'sáng lên' cho tên */
+@keyframes glowIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+        text-shadow: 0 0 15px #ff85a2; /* Glow màu hồng */
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        text-shadow: none; /* Tắt glow khi đã hiện rõ */
+    }
+}
+
+/* Hiệu ứng mờ đi đơn giản */
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Hiệu ứng hiện ra cho lời chúc cuối */
+@keyframes wishFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Hơi đi lên từ dưới */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* --- 5. TÙY CHỈNH CHO ĐIỆN THOẠI (giữ nguyên) --- */
+@media (max-width: 768px) {
+    .top-image { width: 90%; height: auto; }
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 3rem; }
+    #music-player { bottom: 10px; right: 10px; padding: 8px 10px; width: calc(100% - 20px); box-sizing: border-box; }
+    #song-title { font-size: 0.9rem; }
+    .controls button { font-size: 1rem; }
+    #play-pause-btn { font-size: 1.5rem; }
+    #volume-slider { width: 60px; }
+    #music-player-note { bottom: 75px; right: 10px; left: 10px; width: auto; font-size: 0.8rem; text-align: right; }
+    #music-player-note p { justify-content: flex-end; }
+    
+    /* Điều chỉnh font lời chúc cuối trên điện thoại */
+    #final-wish {
+        font-size: 1.8rem;
+    }
+}

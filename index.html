@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng 20/10</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+    <meta property="og:title" content="o mai ka">
+    <meta property="og:description" content="Một món quà nhỏ gửi đến bạn...">
+    
+    <meta property="og:url" content="https://quydepzai.github.io/loi-chuc-20-10/">
+    
+    <meta property="og:image" content="https://quydepzai.github.io/loi-chuc-20-10/anh-preview.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    
+    <div id="intro-overlay"></div>
+    <div id="background-particles"></div>
+    <div class="container" id="main-content">
+        <img src="my-image.jpg" alt="Ảnh kỷ niệm" class="top-image">
+        <h1 id="main-message"></h1> 
+        
+        <h2 id="name-element">Hamburger Tofu</h2>
+        
+        <p id="final-wish"></p>
+    </div>
+
+    <div id="music-player">
+        <div class="song-info">
+            <img id="cover-art" src="cover1.jpg" alt="Cover Art">
+            <div id="song-title">Tên Bài Hát</div>
+        </div>
+        <div class="controls">
+            <button id="shuffle-btn"><i class="fas fa-random"></i></button>
+            <button id="prev-btn"><i class="fas fa-backward"></i></button>
+            <button id="play-pause-btn"><i class="fas fa-play"></i></button> 
+            <button id="next-btn"><i class="fas fa-forward"></i></button>
+            <button id="repeat-btn"><i class="fas fa-redo"></i></button>
+            
+            <button id="mute-btn"><i class="fas fa-volume-mute"></i></button> 
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0"> 
+        </div>
+        <audio id="audio-player"></audio>
+    </div>
+
+    <div id="music-player-note">
+        <p>Bấm vào đây để phát nhạc <i class="fas fa-arrow-right"></i></p>
+    </div>
+    
+    <script>
+        // === PHẦN 1: LOGIC HIỆU ỨNG (INTRO + GÕ CHỮ) ===
+        
+        const message = "Chúc mừng ngày 20/10, ngày Phụ nữ Việt Nam 🌹";
+        const messageElement = document.getElementById("main-message");
+        
+        // === CẬP NHẬT: Lấy thêm 2 element mới ===
+        const nameElement = document.getElementById('name-element');
+        const finalWishElement = document.getElementById('final-wish');
+        
+        let i = 0;
+
+        function typeWriter() {
+            if (i < message.length) {
+                messageElement.innerHTML += message.charAt(i);
+                i++;
+                setTimeout(typeWriter, 80);
+            } else {
+                // === CẬP NHẬT: BẮT ĐẦU CHUỖI HIỆU ỨNG MỚI TẠI ĐÂY ===
+                messageElement.style.borderRight = 'none'; // Xóa con trỏ
+                
+                // 1. Sau 0.5s, hiện tên (với animation 'glowIn' 1.5s)
+                setTimeout(() => {
+                    nameElement.classList.add('visible');
+                    
+                    // 2. Đợi tên hiện xong (1.5s) + Đợi 5s theo yêu cầu
+                    setTimeout(() => {
+                        
+                        // 3. Ẩn tên (với animation 'fadeOut' 1s)
+                        nameElement.classList.add('hide');
+                        
+                        // 4. Đợi tên ẩn xong (1s)
+                        setTimeout(() => {
+                            nameElement.style.display = 'none'; // Ẩn hoàn toàn tên
+                            
+                            // 5. Viết nội dung và hiện lời chúc cuối
+                            finalWishElement.innerHTML = '<i>Duy Quý, ông trùm mafia internet số 1 Việt Nam,<br> xin chúc bà vạn sự như ý, tỷ sự như mơ, triệu triệu bất ngờ, ngập tràn hạnh phúc, <br>chúc bà 8386 mãi đỉnh mãi đỉnh mãi đỉnh</i>';
+                            finalWishElement.classList.add('visible');
+                            
+                        }, 1000); // khớp với thời gian animation 'fadeOut'
+                        
+                    }, 1500 + 5000); // 1.5s (glowIn) + 5s (wait)
+                    
+                }, 500); // 0.5s sau khi gõ chữ xong
+            }
+        }
+
+        // Logic tạo hạt (giữ nguyên)
+        function createParticles(container, count, className, isIntro = false) {
+            for (let j = 0; j < count; j++) {
+                const particle = document.createElement('div');
+                particle.className = className;
+                if (isIntro && className.includes('particle')) { const size = Math.random() * (70 - 59) + 59; particle.style.width = `${size}px`; particle.style.height = `${size}px`; } else if (className === 'bg-particle') { const size = Math.random() * (15 - 10) + 10; particle.style.width = `${size}px`; particle.style.height = `${size}px`; }
+                const isBlue = Math.random() < 0.3; if (isBlue) { particle.classList.add('blue'); }
+                if (className.includes('intro-particle') || className.includes('intro-streak')) { const startX = Math.random() * 100 - 50; const startY = Math.random() * 100 - 50; const startScale = Math.random() * 0.5 + 0.2; particle.style.setProperty('--start-transform', `translate(${startX}vw, ${startY}vh) scale(${startScale})`); const endX = Math.random() * 100 - 50; const endY = Math.random() * 100 - 50; const endScale = Math.random() * 1 + 1; particle.style.setProperty('--end-transform', `translate(${endX}vw, ${endY}vh) scale(${endScale})`); } else if (className === 'bg-particle' || className === 'bg-streak') { particle.style.left = `${Math.random() * 100}%`; particle.style.animationDuration = `${Math.random() * 15 + 10}s`; particle.style.animationDelay = `${Math.random() * 10}s`; particle.style.setProperty('--float-end-x', `${Math.random() * 100 - 50}vw`); }
+                container.appendChild(particle);
+            }
+        }
+
+        // Logic chuỗi intro (giữ nguyên)
+        function startSequence() {
+            const introOverlay = document.getElementById('intro-overlay');
+            const bgParticles = document.getElementById('background-particles');
+            const mainContent = document.getElementById('main-content');
+            const musicPlayerNote = document.getElementById('music-player-note'); 
+            createParticles(introOverlay, 30, 'intro-particle', true); createParticles(introOverlay, 20, 'intro-streak', true); createParticles(bgParticles, 15, 'bg-particle'); createParticles(bgParticles, 10, 'bg-streak');
+            introOverlay.classList.add('converge');
+            setTimeout(() => {
+                introOverlay.classList.remove('converge');
+                introOverlay.classList.add('explode');
+                if (!isPlaying) { playMusic(); }
+            }, 2000); 
+            setTimeout(() => {
+                introOverlay.style.opacity = 0;
+                introOverlay.style.pointerEvents = 'none';
+                mainContent.style.opacity = 1;
+                typeWriter(); // Bắt đầu gõ chữ
+                musicPlayerNote.style.opacity = 1; // Hiện ghi chú nhạc
+            }, 3500);
+        }
+
+        window.onload = startSequence;
+
+        // === PHẦN 2: LOGIC TRÌNH PHÁT NHẠC (giữ nguyên) ===
+        const audioPlayer = document.getElementById('audio-player');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        const repeatBtn = document.getElementById('repeat-btn');
+        const coverArt = document.getElementById('cover-art');
+        const songTitle = document.getElementById('song-title');
+        const muteBtn = document.getElementById('mute-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const musicPlayerNote = document.getElementById('music-player-note'); 
+
+        const playlist = [
+            { title: 'Cà Phê', src: 'song1.mp3', cover: 'cover1.jpg' },
+            { title: 'Miniskirt', src: 'song2.mp3', cover: 'cover2.jpg' },
+            { title: 'AEAO', src: 'song3.mp3', cover: 'cover3.jpg' }
+        ];
+
+        let currentSongIndex = 0;
+        let isPlaying = false;
+        let isShuffling = false;
+        let repeatMode = 'off';
+        let lastVolume = 1;
+
+        audioPlayer.muted = true;
+        volumeSlider.value = 0;
+
+        function loadSong(index) {
+            const song = playlist[index];
+            audioPlayer.src = song.src;
+            coverArt.src = song.cover;
+            songTitle.textContent = song.title;
+            if (isPlaying) { playMusic(); }
+        }
+
+        function playMusic() {
+            audioPlayer.play().then(() => {
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                isPlaying = true;
+                hideNote(); 
+            }).catch(e => {
+                console.warn("Lỗi phát nhạc:", e);
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                isPlaying = false;
+            });
+        }
+
+        function pauseMusic() {
+            audioPlayer.pause();
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            isPlaying = false;
+        }
+
+        function togglePlayPause() {
+            if (isPlaying) { pauseMusic(); } else {
+                if (audioPlayer.muted) { audioPlayer.muted = false; audioPlayer.volume = lastVolume; }
+                playMusic(); updateVolumeUI();
+            }
+        }
+
+        function playNextSong() {
+            if (isShuffling) { let randomIndex; do { randomIndex = Math.floor(Math.random() * playlist.length); } while (randomIndex === currentSongIndex); currentSongIndex = randomIndex; } else { currentSongIndex = (currentSongIndex + 1) % playlist.length; }
+            loadSong(currentSongIndex);
+        }
+
+        function playPrevSong() {
+            if (isShuffling) { let randomIndex; do { randomIndex = Math.floor(Math.random() * playlist.length); } while (randomIndex === currentSongIndex); currentSongIndex = randomIndex; } else { currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length; }
+            loadSong(currentSongIndex);
+        }
+
+        function toggleShuffle() { isShuffling = !isShuffling; shuffleBtn.classList.toggle('active', isShuffling); }
+
+        function toggleRepeat() {
+            if (repeatMode === 'off') { repeatMode = 'all'; repeatBtn.classList.add('active'); repeatBtn.innerHTML = '<i class="fas fa-redo"></i>'; } else if (repeatMode === 'all') { repeatMode = 'one'; repeatBtn.innerHTML = '<i class="fas fa-redo-alt"></i>'; } else { repeatMode = 'off'; repeatBtn.classList.remove('active'); repeatBtn.innerHTML = '<i class="fas fa-redo"></i>'; }
+            audioPlayer.loop = (repeatMode === 'one');
+        }
+
+        audioPlayer.addEventListener('ended', () => {
+            if (repeatMode === 'one') { audioPlayer.play(); } else if (repeatMode === 'all') { playNextSong(); } else {
+                if (currentSongIndex === playlist.length - 1 && !isShuffling) { pauseMusic(); } else { playNextSong(); }
+            }
+        });
+
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', playPrevSong);
+        nextBtn.addEventListener('click', playNextSong);
+        shuffleBtn.addEventListener('click', toggleShuffle);
+        repeatBtn.addEventListener('click', toggleRepeat);
+
+        muteBtn.addEventListener('click', () => {
+            audioPlayer.muted = !audioPlayer.muted;
+            if (audioPlayer.muted) { lastVolume = audioPlayer.volume > 0 ? audioPlayer.volume : 1; volumeSlider.value = 0; } else { audioPlayer.volume = lastVolume; volumeSlider.value = lastVolume; }
+            updateVolumeUI(); hideNote();
+        });
+
+        volumeSlider.addEventListener('input', () => {
+            audioPlayer.volume = volumeSlider.value; audioPlayer.muted = volumeSlider.value == 0;
+            if (!audioPlayer.muted) { lastVolume = audioPlayer.volume; }
+            updateVolumeUI(); hideNote();
+        });
+
+        function updateVolumeUI() {
+            if (audioPlayer.muted || audioPlayer.volume == 0) { muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>'; } else { muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>'; volumeSlider.value = audioPlayer.volume; }
+        }
+        
+        function hideNote() {
+            if (musicPlayerNote.style.opacity === '1') { musicPlayerNote.style.opacity = 0; musicPlayerNote.style.pointerEvents = 'none'; }
+        }
+        
+        loadSong(currentSongIndex);
+    </script>
+
+</body>
+</html>
