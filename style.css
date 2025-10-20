@@ -6,7 +6,10 @@ body, html {
     background-color: #000000; 
     font-family: 'Montserrat', sans-serif;
     color: #ffffff;
-    overflow: hidden; /* Ngăn cuộn trang */
+    
+    /* CẬP NHẬT: Cho phép cuộn dọc, ngăn cuộn ngang */
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* --- 1. LỚP PHỦ INTRO VÀ ĐỐM SÁNG --- */
@@ -232,7 +235,7 @@ h2 {
 #music-player-note {
     position: fixed;
     bottom: 50px; 
-    right: 400px; 
+    right: 200px; 
     background-color: rgba(255, 255, 255, 0.1); 
     color: #f0f0f0; 
     padding: 10px 15px;
@@ -248,9 +251,8 @@ h2 {
 #music-player-note p { margin: 0; display: flex; align-items: center; gap: 8px; }
 #music-player-note .fas.fa-arrow-right { color: #ff85a2; font-size: 1.1rem; animation: arrowPulse 1.5s infinite ease-in-out; }
 
-/* --- 4. CÁC KEYFRAMES (CẬP NHẬT) --- */
+/* --- 4. CÁC KEYFRAMES (giữ nguyên) --- */
 
-/* Các keyframe cũ (giữ nguyên) */
 @keyframes converge {
     0% { transform: var(--start-transform); opacity: 0.8; }
     100% { transform: translate(0, 0) scale(0.2); opacity: 1; }
@@ -286,56 +288,78 @@ h2 {
     50% { color: #ffc2d1; transform: translateX(5px); }
 }
 
-/* --- KEYFRAMES MỚI CHO TÊN VÀ LỜI CHÚC --- */
-
-/* Hiệu ứng 'sáng lên' cho tên */
 @keyframes glowIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-        text-shadow: 0 0 15px #ff85a2; /* Glow màu hồng */
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-        text-shadow: none; /* Tắt glow khi đã hiện rõ */
-    }
+    from { opacity: 0; transform: scale(0.8); text-shadow: 0 0 15px #ff85a2; }
+    to { opacity: 1; transform: scale(1); text-shadow: none; }
 }
-
-/* Hiệu ứng mờ đi đơn giản */
 @keyframes fadeOut {
     from { opacity: 1; }
     to { opacity: 0; }
 }
-
-/* Hiệu ứng hiện ra cho lời chúc cuối */
 @keyframes wishFadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px); /* Hơi đi lên từ dưới */
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 
-/* --- 5. TÙY CHỈNH CHO ĐIỆN THOẠI (giữ nguyên) --- */
+/* --- 5. CẬP NHẬT TÙY CHỈNH CHO ĐIỆN THOẠI --- */
 @media (max-width: 768px) {
-    .top-image { width: 90%; height: auto; }
-    h1 { font-size: 1.8rem; }
-    h2 { font-size: 3rem; }
-    #music-player { bottom: 10px; right: 10px; padding: 8px 10px; width: calc(100% - 20px); box-sizing: border-box; }
+    
+    /* CẬP NHẬT: Cho container co giãn và có đệm dưới */
+    .container {
+        height: auto; /* Chiều cao tự động theo nội dung */
+        min-height: 100vh; /* Chiều cao tối thiểu 100% màn hình */
+        padding-bottom: 200px; /* Thêm đệm dưới để chừa chỗ cho trình phát nhạc */
+    }
+
+    /* CẬP NHẬT: Ảnh chiếm 90% chiều rộng */
+    .top-image {
+        width: 90%; 
+        height: auto; 
+    }
+
+    /* CẬP NHẬT: Cho H1 xuống dòng và giảm font */
+    h1 {
+        font-size: 1.6rem; /* Giảm font chữ */
+        white-space: normal; /* Cho phép chữ xuống dòng */
+        word-break: break-word; /* Bẻ từ nếu cần */
+    }
+
+    /* CẬP NHẬT: Giảm font H2 */
+    h2 {
+        font-size: 2.2rem; /* Giảm font chữ */
+    }
+    
+    /* CẬP NHẬT: Trình phát nhạc chiếm 100% chiều rộng */
+    #music-player {
+        bottom: 10px;
+        right: 10px;
+        left: 10px; /* Thêm left: 10px */
+        padding: 8px 10px;
+        width: calc(100% - 20px); 
+        box-sizing: border-box;
+    }
+    
     #song-title { font-size: 0.9rem; }
     .controls button { font-size: 1rem; }
     #play-pause-btn { font-size: 1.5rem; }
     #volume-slider { width: 60px; }
-    #music-player-note { bottom: 75px; right: 10px; left: 10px; width: auto; font-size: 0.8rem; text-align: right; }
-    #music-player-note p { justify-content: flex-end; }
     
-    /* Điều chỉnh font lời chúc cuối trên điện thoại */
+    /* CẬP NHẬT: Vị trí ghi chú nhạc, nằm trên trình phát nhạc */
+    #music-player-note {
+        bottom: 120px; /* Đẩy lên trên trình phát nhạc (player cao ~100px + 10px bottom) */
+        right: 10px;
+        left: 10px;
+        width: auto;
+        font-size: 0.8rem;
+        text-align: right;
+    }
+    #music-player-note p {
+        justify-content: flex-end;
+    }
+    
+    /* CẬP NHẬT: Giảm font lời chúc cuối */
     #final-wish {
-        font-size: 1.8rem;
+        font-size: 1.4rem; /* Giảm font đáng kể */
     }
 }
