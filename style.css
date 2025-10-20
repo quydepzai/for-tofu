@@ -235,7 +235,7 @@ h2 {
 #music-player-note {
     position: fixed;
     bottom: 50px; 
-    right: 200px; /* <--- DÒNG BỊ LỖI LÀ DÒNG NÀY */
+    right: 500px; 
     background-color: rgba(255, 255, 255, 0.1); 
     color: #f0f0f0; 
     padding: 10px 15px;
@@ -363,4 +363,5 @@ h2 {
         font-size: 1.4rem; /* Giảm font đáng kể */
     }
 }
+
 
